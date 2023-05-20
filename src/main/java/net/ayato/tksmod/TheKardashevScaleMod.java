@@ -1,8 +1,11 @@
 package net.ayato.tksmod;
 
 import com.mojang.logging.LogUtils;
+import net.ayato.tksmod.item.TKSItems;
+import net.ayato.tksmod.tabs.CreativeTabs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -34,13 +37,9 @@ public class TheKardashevScaleMod
     private static final Logger LOGGER = LogUtils.getLogger();
     // Create a Deferred Register to hold Blocks which will all be registered under the "examplemod" namespace
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
-    // Create a Deferred Register to hold Items which will all be registered under the "examplemod" namespace
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
-
     // Creates a new Block with the id "examplemod:example_block", combining the namespace and path
     public static final RegistryObject<Block> EXAMPLE_BLOCK = BLOCKS.register("example_block", () -> new Block(BlockBehaviour.Properties.of(Material.STONE)));
     // Creates a new BlockItem with the id "examplemod:example_block", combining the namespace and path
-    public static final RegistryObject<Item> EXAMPLE_BLOCK_ITEM = ITEMS.register("example_block", () -> new BlockItem(EXAMPLE_BLOCK.get(), new Item.Properties()));
 
     public TheKardashevScaleMod()
     {
@@ -52,7 +51,7 @@ public class TheKardashevScaleMod
         // Register the Deferred Register to the mod event bus so blocks get registered
         BLOCKS.register(modEventBus);
         // Register the Deferred Register to the mod event bus so items get registered
-        ITEMS.register(modEventBus);
+        TKSItems.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -70,8 +69,9 @@ public class TheKardashevScaleMod
 
     private void addCreative(CreativeModeTabEvent.BuildContents event)
     {
-        if (event.getTab() == CreativeModeTabs.BUILDING_BLOCKS)
-            event.accept(EXAMPLE_BLOCK_ITEM);
+        if (event.getTab() == CreativeTabs.ITEM_TAB){
+            event.accept(TKSItems.WOOD_GEAR.get());
+        }
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
