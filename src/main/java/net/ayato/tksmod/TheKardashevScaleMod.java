@@ -1,13 +1,11 @@
 package net.ayato.tksmod;
 
 import com.mojang.logging.LogUtils;
+import net.ayato.tksmod.block.TKSBlocks;
 import net.ayato.tksmod.item.TKSItems;
 import net.ayato.tksmod.tabs.CreativeTabs;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -35,11 +33,6 @@ public class TheKardashevScaleMod
     public static final String MODID = "tksmod";
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
-    // Create a Deferred Register to hold Blocks which will all be registered under the "examplemod" namespace
-    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
-    // Creates a new Block with the id "examplemod:example_block", combining the namespace and path
-    public static final RegistryObject<Block> EXAMPLE_BLOCK = BLOCKS.register("example_block", () -> new Block(BlockBehaviour.Properties.of(Material.STONE)));
-    // Creates a new BlockItem with the id "examplemod:example_block", combining the namespace and path
 
     public TheKardashevScaleMod()
     {
@@ -49,7 +42,7 @@ public class TheKardashevScaleMod
         modEventBus.addListener(this::commonSetup);
 
         // Register the Deferred Register to the mod event bus so blocks get registered
-        BLOCKS.register(modEventBus);
+        TKSBlocks.register(modEventBus);
         // Register the Deferred Register to the mod event bus so items get registered
         TKSItems.register(modEventBus);
 
@@ -70,8 +63,11 @@ public class TheKardashevScaleMod
     private void addCreative(CreativeModeTabEvent.BuildContents event)
     {
         if (event.getTab() == CreativeTabs.ITEM_TAB){
-            event.accept(TKSItems.WOOD_GEAR.get());
-            event.accept(TKSItems.STEEL_INGOT.get());
+            event.accept(TKSItems.WOOD_GEAR);
+            event.accept(TKSItems.STEEL_INGOT);
+        }
+        if (event.getTab() == CreativeTabs.BLOCK_TAB) {
+            event.accept(TKSBlocks.STEEL_BLOCK);
         }
     }
 
