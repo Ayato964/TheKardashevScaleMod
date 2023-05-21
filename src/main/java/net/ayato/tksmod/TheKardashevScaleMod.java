@@ -71,6 +71,7 @@ public class TheKardashevScaleMod
     {
         if (event.getTab() == CreativeTabs.ITEM_TAB){
             event.accept(TKSItems.WOOD_GEAR.get());
+            event.accept(TKSItems.STEEL_INGOT.get());
         }
     }
 

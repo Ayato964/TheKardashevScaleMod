@@ -1,6 +1,8 @@
 {
   "item.tksmod.wood_gear": "木の歯車",
   "item.tksmod.wood_gear.desc": "木の歯車は最も基礎的な素材で、\n運動エネルギーを伝達させるのに有力です。",
+  "item.tksmod.steel_ingot": "鋼鉄インゴット",
+  "item.tksmod.steel_ingot.desc": "鉄と石炭を組み合わせることにより、鉄よりも丈夫な金属になった。",
 
   "tkstabs.item_tab": "The Kardashev Scale age 0(Items)"
 }
