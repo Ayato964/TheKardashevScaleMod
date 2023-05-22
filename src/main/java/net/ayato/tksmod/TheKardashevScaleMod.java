@@ -68,6 +68,7 @@ public class TheKardashevScaleMod
         }
         if (event.getTab() == CreativeTabs.BLOCK_TAB) {
             event.accept(TKSBlocks.STEEL_BLOCK);
+            event.accept(TKSBlocks.DEBUG_BLOCK);
         }
     }
 

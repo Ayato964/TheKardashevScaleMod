@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "tksmod:steel_block"
+    "tksmod:steel_block",
+    "tksmod:debug_block"
   ]
 }
