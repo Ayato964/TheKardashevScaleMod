@@ -29,7 +29,6 @@ public abstract class AbstractTKSBlock extends HorizontalDirectionalBlock {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext placeContext) {
-        System.out.println();
         return this.defaultBlockState().setValue(FACING, placeContext.getHorizontalDirection().getOpposite());
     }
 
