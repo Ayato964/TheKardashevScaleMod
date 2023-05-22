@@ -4,5 +4,9 @@
   "item.tksmod.steel_ingot": "鋼鉄インゴット",
   "item.tksmod.steel_ingot.desc": "鉄と石炭を組み合わせることにより、鉄よりも丈夫な金属になった。",
 
-  "tkstabs.item_tab": "The Kardashev Scale age 0(Items)"
+  "block.tksmod.steel_block": "Steel Block",
+  "item.tksmod.steel_block.desc": "９つの鋼鉄インゴットによって作られたブロック",
+
+  "tkstabs.item_tab": "The Kardashev Scale age 0(Items)",
+  "tkstabs.block_tab": "The Kardashev Scale age 0(Blocks)"
 }

@@ -3,7 +3,9 @@
   "item.tksmod.wood_gear.desc": "Wooden gears are the most basic material,\nIt is a powerful tool for transferring kinetic energy.",
   "item.tksmod.steel_ingot": "Steel Ingot",
   "item.tksmod.steel_ingot.desc": "The combination of iron and coal made the metal tougher than steel.",
+  "block.tksmod.steel_block": "Steel Block",
+  "item.tksmod.steel_block.desc": "steel block is made in 9 steel ingots",
 
-
-  "tkstabs.item_tab": "The Kardashev Scale age 0(Items)"
+  "tkstabs.item_tab": "The Kardashev Scale age 0(Items)",
+  "tkstabs.block_tab": "The Kardashev Scale age 0(Blocks)"
 }
