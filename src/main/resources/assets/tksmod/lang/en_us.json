@@ -7,5 +7,17 @@
   "item.tksmod.steel_block.desc": "steel block is made in 9 steel ingots",
 
   "tkstabs.item_tab": "The Kardashev Scale age 0(Items)",
-  "tkstabs.block_tab": "The Kardashev Scale age 0(Blocks)"
+  "tkstabs.block_tab": "The Kardashev Scale age 0(Blocks)",
+
+
+
+  "//ADVANCEMENTS": "",
+  "advancements.birth_me.title": "Where are we? Who am I?",
+  "advancements.birth_me.mes": "I was born into this world.",
+  "advancements.detection_redstone.title": "Cutting-edge sources",
+  "advancements.detection_redstone.mes": "A jewel that emits light when touched,?\nNo, it emits energy. How in the world did it...?",
+  "advancements.experiment_redstone.title":"Let's do an experiment.",
+  "advancements.experiment_redstone.mes": "We know that Redstone generates energy by reacting to objects in its vicinity.\nSo what happens if we create a simple lever and take action next to the Redstone?",
+  "advancements.redstone_age.title":"RedStone Age",
+  "advancements.redstone_age.mes": "The experiment showed that energy is transmitted up to 15 blocks around the lever.\nAlso, unlike electrical energy as I know it, the output of energy does not decay with distance. In short, we found that energy is expressed as 0 or 1, and if it is 1, it outputs a certain amount of energy."
 }

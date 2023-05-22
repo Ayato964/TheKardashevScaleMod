@@ -8,5 +8,18 @@
   "item.tksmod.steel_block.desc": "９つの鋼鉄インゴットによって作られたブロック",
 
   "tkstabs.item_tab": "The Kardashev Scale age 0(Items)",
-  "tkstabs.block_tab": "The Kardashev Scale age 0(Blocks)"
+  "tkstabs.block_tab": "The Kardashev Scale age 0(Blocks)",
+
+
+  "//ADVANCEMENTS": "",
+  "advancements.birth_me.title": "ここはどこ？私は誰？",
+  "advancements.birth_me.mes": "生まれてしまった。",
+  "advancements.detection_redstone.title": "最先端の源",
+  "advancements.detection_redstone.mes": "触ったら発光する宝石、、？\n違う、これはエネルギーを発しているんだ。一体どうやって、、？",
+  "advancements.experiment_redstone.title":"実験をしよう",
+  "advancements.experiment_redstone.mes": "レッドストーンは周辺の物に反応してエネルギーを発生させることが分かった。\nでは簡易的なレバーを作成し、レッドストーンの横でアクションを起こすとどうなるだろうか？",
+  "advancements.redstone_age.title":"レッドストーン時代",
+  "advancements.redstone_age.mes": "実験の結果、レバーを中心にエネルギーは15ブロックまで伝達することが分かった。\nまた、私の知っている電気エネルギーと違い、距離によってエネルギーの出力は減衰しない。\n要するにエネルギーが0か1で表現され、１なら一定量のエネルギーを出力することが分かった。"
+
+
 }

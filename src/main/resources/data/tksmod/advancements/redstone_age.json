@@ -1,0 +1,43 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:lever"
+    },
+    "title": {
+      "translate": "advancements.redstone_age.title",
+      "color": "purple",
+      "bold": true,
+      "italic": true
+    },
+    "description": {
+      "translate": "advancements.redstone_age.mes",
+      "color": "yellow"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "parent": "tksmod:experiment_redstone",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "block": "minecraft:lever",
+        "location": {}
+      }
+    },
+    "a": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "block": "minecraft:redstone_wire"
+      }
+    }
+  },
+  "rewards": {
+    "recipes": [
+      ""
+    ],
+    "experience": 30
+  }
+}
