@@ -1,0 +1,29 @@
+{
+  "display": {
+    "icon": {
+      "item": "tksmod:steel_ingot"
+    },
+    "title": {
+      "translate": "advancements.birth_me.title",
+      "bold": true,
+      "italic": true
+    },
+    "description": {
+      "translate": "advancements.birth_me.mes"
+    },
+    "background": "tksmod:textures/block/steel_block.png",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:location",
+      "conditions": {}
+    }
+  },
+  "rewards": {
+    "experience": 1
+  }
+}
