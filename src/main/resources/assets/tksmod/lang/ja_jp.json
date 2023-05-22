@@ -19,7 +19,13 @@
   "advancements.experiment_redstone.title":"実験をしよう",
   "advancements.experiment_redstone.mes": "レッドストーンは周辺の物に反応してエネルギーを発生させることが分かった。\nでは簡易的なレバーを作成し、レッドストーンの横でアクションを起こすとどうなるだろうか？",
   "advancements.redstone_age.title":"レッドストーン時代",
-  "advancements.redstone_age.mes": "実験の結果、レバーを中心にエネルギーは15ブロックまで伝達することが分かった。\nまた、私の知っている電気エネルギーと違い、距離によってエネルギーの出力は減衰しない。\n要するにエネルギーが0か1で表現され、１なら一定量のエネルギーを出力することが分かった。"
-
-
+  "advancements.redstone_age.mes": "実験の結果、レバーを中心にエネルギーは15ブロックまで伝達することが分かった。\nまた、私の知っている電気エネルギーと違い、距離によってエネルギーの出力は減衰しない。\n要するにエネルギーが0か1で表現され、１なら一定量のエネルギーを出力することが分かった。",
+  "advancements.piston.title": "運動エネルギーへの変換",
+  "advancements.piston.mes": "レッドストーンエネルギーは０に限りなく近い質量をもっていることが明らかになった。そのためレッドストーンを密閉し、ピストン可能な仕組みを作ることで運動エネルギーへの変換が可能になる。",
+  "advancements.redstone_lamp.title": "光エネルギーへの変換",
+  "advancements.redstone_lamp.mes": "グロウストーンは無条件に光エネルギーを発することが分かっている。レッドストーンと組み合わせると、レッドストーンエネルギーを受信したときだけ光エネルギーを発するようになる。",
+  "advancements.repeater.title": "レッドストーンエネルギー伝達の拡張",
+  "advancements.repeater.mes": "レッドストーンエネルギーは常に定量である一方、伝達距離には制限が存在する。\nそこで、レッドストーントーチの法則に基づき、拡張するシステムを開発した。",
+  "advancements.comparator.title": "無動力源からの抽出",
+  "advancements.comparator.mes": "動力源としての役割を持たないブロックをどうにかして動力源として活用できないだろうか。"
 }

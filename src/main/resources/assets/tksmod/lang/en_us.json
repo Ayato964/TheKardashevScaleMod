@@ -19,5 +19,13 @@
   "advancements.experiment_redstone.title":"Let's do an experiment.",
   "advancements.experiment_redstone.mes": "We know that Redstone generates energy by reacting to objects in its vicinity.\nSo what happens if we create a simple lever and take action next to the Redstone?",
   "advancements.redstone_age.title":"RedStone Age",
-  "advancements.redstone_age.mes": "The experiment showed that energy is transmitted up to 15 blocks around the lever.\nAlso, unlike electrical energy as I know it, the output of energy does not decay with distance. In short, we found that energy is expressed as 0 or 1, and if it is 1, it outputs a certain amount of energy."
+  "advancements.redstone_age.mes": "The experiment showed that energy is transmitted up to 15 blocks around the lever.\nAlso, unlike electrical energy as I know it, the output of energy does not decay with distance. In short, we found that energy is expressed as 0 or 1, and if it is 1, it outputs a certain amount of energy.",
+  "advancements.piston.title": "Conversion to kinetic energy",
+  "advancements.piston.mes": "Redstone energy was found to have a mass as close to zero as possible. Therefore, by sealing the redstone and creating a pistonable mechanism, it can be converted into kinetic energy.",
+  "advancements.redstone_lamp.title": "Conversion to light energy",
+  "advancements.redstone_lamp.mes": "Glowstone is known to emit unconditional light energy. When combined with redstone, it emits light energy only when it receives redstone energy.",
+  "advancements.repeater.title": "Extended Redstone Energy Transfer",
+  "advancements.repeater.mes": "While Redstone energy is always quantitative, a limit exists on the transmission distance.\nTherefore, we developed a system that extends based on the Redstone Torch Law.",
+  "advancements.comparator.title": "Extraction from non-powered sources",
+  "advancements.comparator.mes": "Can we somehow utilize a block that has no role as a power source as a power source?"
 }
