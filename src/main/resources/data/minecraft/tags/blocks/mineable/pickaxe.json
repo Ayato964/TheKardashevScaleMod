@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "tksmod:steel_block",
-    "tksmod:debug_block"
+    "tksmod:debug_block",
+    "tksmod:energy_test_block"
   ]
 }

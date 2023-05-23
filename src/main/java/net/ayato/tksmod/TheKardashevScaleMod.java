@@ -6,6 +6,7 @@ import net.ayato.tksmod.block.entity.TKSBlockEntities;
 import net.ayato.tksmod.item.TKSItems;
 import net.ayato.tksmod.recipe.TKSRecipes;
 import net.ayato.tksmod.screen.Debug_BlockScreen;
+import net.ayato.tksmod.screen.EnergyTestBlockScreen;
 import net.ayato.tksmod.screen.TKSModMenuTypes;
 import net.ayato.tksmod.tabs.CreativeTabs;
 import net.minecraft.client.Minecraft;
@@ -81,6 +82,7 @@ public class TheKardashevScaleMod
         if (event.getTab() == CreativeTabs.BLOCK_TAB) {
             event.accept(TKSBlocks.STEEL_BLOCK);
             event.accept(TKSBlocks.DEBUG_BLOCK);
+            event.accept(TKSBlocks.ENERGY_TEST_BLOCK);
         }
     }
 
@@ -104,6 +106,7 @@ public class TheKardashevScaleMod
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
 
             MenuScreens.register((MenuType)TKSModMenuTypes.DEBUG_BLOCK_MENU.get(), Debug_BlockScreen::new);
+            MenuScreens.register((MenuType)TKSModMenuTypes.ENERGY_TEST_BLOCK.get(), EnergyTestBlockScreen::new);
         }
     }
 }

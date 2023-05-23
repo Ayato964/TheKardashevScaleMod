@@ -8,6 +8,8 @@
   "item.tksmod.steel_block.desc": "９つの鋼鉄インゴットによって作られたブロック",
   "block.tksmod.debug_block": "デバッグブロック",
   "item.tksmod.debug_block.desc": "エンティティのテストのために作られたブロック",
+  "block.tksmod.energy_test_block": "エネルギーのテストブロック",
+  "item.tksmod.energy_test_block.desc": "エネルギーのテストのために作られたブロック",
 
 
   "tkstabs.item_tab": "The Kardashev Scale age 0(Items)",

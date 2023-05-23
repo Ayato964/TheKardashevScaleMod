@@ -12,7 +12,9 @@ public class TKSRecipes {
             DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, TheKardashevScaleMod.MODID);
 
     public static final RegistryObject<Debug_BlockRecipe.Serializer> DEBUG_BLOCK_SERIAL =
-            SERIALIZERS.register("debug_block", ()->Debug_BlockRecipe.Serializer.INSTANCE);
+            SERIALIZERS.register("debug_block", ()-> Debug_BlockRecipe.Serializer.INSTANCE);
+    public static final RegistryObject<EnergyTestBlockRecipe.Serializer> ENERGY_TEST_BLOCK_SERIAL =
+            SERIALIZERS.register("energy_test_block", ()-> EnergyTestBlockRecipe.Serializer.INSTANCE);
 
     public static void register(IEventBus bus){
         SERIALIZERS.register(bus);

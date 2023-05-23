@@ -1,33 +1,28 @@
 package net.ayato.tksmod.block.entity;
 
-import net.ayato.tksmod.block.Debug_Block;
-import net.ayato.tksmod.recipe.Debug_BlockRecipe;
+import net.ayato.tksmod.block.EnergyTestBlock;
+import net.ayato.tksmod.recipe.AbstractTKSRecipe;
 import net.ayato.tksmod.recipe.EnergyTestBlockRecipe;
-import net.ayato.tksmod.screen.Debug_BlockMenu;
+import net.ayato.tksmod.screen.EnergyTestBlockMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Optional;
 
-public class Debug_BlockEntity extends AbstractTKSBlockEntity{
-    public static final String ID = Debug_Block.ID;
-    public Debug_BlockEntity(BlockPos pos, BlockState state) {
-        super(TKSBlockEntities.DEBUG_BLOCK.get(), pos, state);
-    }
-
-    @Override
-    protected Optional<Debug_BlockRecipe> getRecipe(SimpleContainer inventory, Level level) {
-        return level.getRecipeManager().getRecipeFor(Debug_BlockRecipe.Type.INSTANCE, inventory, level);
+public class EnergyTestBlockEntity extends AbstractTKSBlockEntity{
+    public EnergyTestBlockEntity(BlockPos pos, BlockState state) {
+        super(TKSBlockEntities.ENERGY_TEST_BLOCK.get(), pos, state);
     }
 
     @Override
     protected String getName() {
-        return ID;
+        return EnergyTestBlock.ID;
     }
 
     @Override
@@ -37,12 +32,12 @@ public class Debug_BlockEntity extends AbstractTKSBlockEntity{
 
     @Override
     protected AbstractContainerMenu getCreateMenu(int id, Inventory inventory, Player player) {
-        return new Debug_BlockMenu(id, inventory, this, this.data);
+        return new EnergyTestBlockMenu(id, inventory, this, this.data);
     }
 
     @Override
     protected int getMaxProgress() {
-        return 78;
+        return 20;
     }
 
     @Override
@@ -50,5 +45,8 @@ public class Debug_BlockEntity extends AbstractTKSBlockEntity{
         return 2;
     }
 
-
+    @Override
+    protected Optional<? extends AbstractTKSRecipe> getRecipe(SimpleContainer inventory, Level level) {
+        return level.getRecipeManager().getRecipeFor(EnergyTestBlockRecipe.Type.INSTANCE, inventory, level);
+    }
 }

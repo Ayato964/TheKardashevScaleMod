@@ -1,0 +1,11 @@
+{
+  "type": "tksmod:energy_test_block",
+  "ingredients": [
+    {
+      "item": "tksmod:steel_ingot"
+    }
+  ],
+  "output": {
+    "item": "minecraft:iron_ingot"
+  }
+}

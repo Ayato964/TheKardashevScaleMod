@@ -14,9 +14,9 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import org.jetbrains.annotations.Nullable;
 
-public class Debug_BlockRecipe extends AbstractTKSRecipe{
+public class EnergyTestBlockRecipe extends AbstractTKSRecipe{
 
-    public Debug_BlockRecipe(ResourceLocation id, ItemStack output, NonNullList<Ingredient> recipeItems) {
+    public EnergyTestBlockRecipe(ResourceLocation id, ItemStack output, NonNullList<Ingredient> recipeItems) {
         super(id, output, recipeItems);
     }
 
@@ -29,21 +29,23 @@ public class Debug_BlockRecipe extends AbstractTKSRecipe{
     protected RecipeType<?> getMyType() {
         return Type.INSTANCE;
     }
-    public static class Type extends AbstractTKSRecipe.Type implements RecipeType<Debug_BlockRecipe> {
+
+
+    public static class Type extends AbstractTKSRecipe.Type implements RecipeType<EnergyTestBlockRecipe> {
         private Type() { }
         public static final Type INSTANCE = new Type();
-        public static final String ID = "debug_block";
+        public static final String ID = "energy_test_block";
     }
 
 
-    public static class Serializer implements RecipeSerializer<Debug_BlockRecipe> {
+    public static class Serializer implements RecipeSerializer<EnergyTestBlockRecipe> {
 
         public static final Serializer INSTANCE = new Serializer();
         public static final ResourceLocation ID =
-                new ResourceLocation(TheKardashevScaleMod.MODID, "debug_block");
+                new ResourceLocation(TheKardashevScaleMod.MODID, "energy_test_block");
 
         @Override
-        public Debug_BlockRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
+        public EnergyTestBlockRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
             ItemStack output = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(pSerializedRecipe, "output"));
 
             JsonArray ingredients = GsonHelper.getAsJsonArray(pSerializedRecipe, "ingredients");
@@ -52,11 +54,11 @@ public class Debug_BlockRecipe extends AbstractTKSRecipe{
                 inputs.set(i, Ingredient.fromJson(ingredients.get(i)));
             }
 
-            return new Debug_BlockRecipe(pRecipeId, output, inputs);
+            return new EnergyTestBlockRecipe(pRecipeId, output, inputs);
         }
 
         @Override
-        public @Nullable Debug_BlockRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
+        public @Nullable EnergyTestBlockRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
             NonNullList<Ingredient> inputs = NonNullList.withSize(buf.readInt(), Ingredient.EMPTY);
 
             for (int i = 0; i < inputs.size(); i++) {
@@ -64,11 +66,11 @@ public class Debug_BlockRecipe extends AbstractTKSRecipe{
             }
 
             ItemStack output = buf.readItem();
-            return new Debug_BlockRecipe(id, output, inputs);
+            return new EnergyTestBlockRecipe(id, output, inputs);
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf buf, Debug_BlockRecipe recipe) {
+        public void toNetwork(FriendlyByteBuf buf, EnergyTestBlockRecipe recipe) {
             buf.writeInt(recipe.getIngredients().size());
 
             for (Ingredient ing : recipe.getIngredients()) {

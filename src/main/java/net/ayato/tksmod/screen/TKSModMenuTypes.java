@@ -19,6 +19,8 @@ public class TKSModMenuTypes {
 
     public static final RegistryObject<MenuType<AbstractTKSMenu>> DEBUG_BLOCK_MENU =
         registerMenu(Debug_BlockMenu::new, "debug_block_menu");
+    public static final RegistryObject<MenuType<AbstractTKSMenu>> ENERGY_TEST_BLOCK =
+            registerMenu(EnergyTestBlockMenu::new, "energy_test_block");
 
 
     private static <T extends AbstractContainerMenu>RegistryObject<MenuType<T>> registerMenu(IContainerFactory<T> factory, String name){

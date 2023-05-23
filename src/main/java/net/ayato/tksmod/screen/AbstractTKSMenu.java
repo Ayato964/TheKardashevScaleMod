@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -39,11 +40,6 @@ public abstract class AbstractTKSMenu extends AbstractContainerMenu {
     public boolean isCrafting() {
         return data.get(0) > 0;
     }
-
-    /**
-     * @deprecated
-     * @return
-     */
     public int getScaledProgress() {
         int progress = this.data.get(0);
         int maxProgress = this.data.get(1);  // Max Progress
@@ -104,15 +100,9 @@ public abstract class AbstractTKSMenu extends AbstractContainerMenu {
         sourceSlot.onTake(playerIn, sourceStack);
         return copyOfSourceStack;
     }
-
-    /**
-     * @deprecated
-     * @param player
-     * @return
-     */
     @Override
     public boolean stillValid(Player player) {
-        return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()), player, TKSBlocks.DEBUG_BLOCK.get());
+        return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()), player, getMyBlock());
     }
     private void addPlayerInventory(Inventory playerInventory){
         for(int i = 0; i < 3; i ++){
@@ -128,4 +118,5 @@ public abstract class AbstractTKSMenu extends AbstractContainerMenu {
     }
     protected abstract void setSlots(IItemHandler handler);
     protected abstract int getProgressBarHeight();
+    protected abstract Block getMyBlock();
 }

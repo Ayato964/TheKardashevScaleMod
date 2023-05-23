@@ -1,7 +1,8 @@
 package net.ayato.tksmod.block.entity;
 
 import net.ayato.tksmod.recipe.AbstractTKSRecipe;
-import net.ayato.tksmod.recipe.Debug_BlockRecipe;
+import net.ayato.tksmod.recipe.EnergyTestBlockRecipe;
+import net.ayato.tksmod.screen.EnergyTestBlockMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -148,14 +149,11 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
         this.progress = 0;
     }
 
-    /**
-     * @deprecated
-     * @param entity
-     */
+
     private static void craftItem(AbstractTKSBlockEntity entity) {
         Level level = entity.level;
         SimpleContainer inventory = entity.convertItemHandlerToContainer();
-        Optional<Debug_BlockRecipe> recipe = level.getRecipeManager().getRecipeFor(Debug_BlockRecipe.Type.INSTANCE, inventory, level);
+        Optional<? extends AbstractTKSRecipe> recipe  = entity.getRecipe(inventory, level);
 
 
         if(hasRecipe(entity)){
@@ -184,23 +182,9 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
         }
         return false;
     }
-
-
-    /**
-     * @deprecated
-     * @param inventory
-     * @param itemStack
-     * @return
-     */
     private static boolean canInsertItemIntoOutputSlot(SimpleContainer inventory, ItemStack itemStack) {
         return inventory.getItem(1).getItem() == itemStack.getItem() || inventory.getItem(1).isEmpty();
     }
-
-    /**
-     * @deprecated
-     * @param inventory
-     * @return
-     */
     private static boolean canInsertAmountIntoOutputSlot(SimpleContainer inventory) {
         return  inventory.getItem(1).getMaxStackSize() > inventory.getItem(1).getCount();
     }
