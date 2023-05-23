@@ -2,9 +2,15 @@ package net.ayato.tksmod;
 
 import com.mojang.logging.LogUtils;
 import net.ayato.tksmod.block.TKSBlocks;
+import net.ayato.tksmod.block.entity.TKSBlockEntities;
 import net.ayato.tksmod.item.TKSItems;
+import net.ayato.tksmod.screen.Debug_BlockScreen;
+import net.ayato.tksmod.screen.TKSModMenuTypes;
 import net.ayato.tksmod.tabs.CreativeTabs;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -46,9 +52,12 @@ public class TheKardashevScaleMod
         // Register the Deferred Register to the mod event bus so items get registered
         TKSItems.register(modEventBus);
 
+        //Register BlockEntities
+        TKSBlockEntities.register(modEventBus);
+
+        TKSModMenuTypes.register(modEventBus);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
     }
@@ -90,6 +99,8 @@ public class TheKardashevScaleMod
             // Some client setup code
             LOGGER.info("HELLO FROM CLIENT SETUP");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
+
+            MenuScreens.register((MenuType)TKSModMenuTypes.DEBUG_BLOCK_MENU.get(), Debug_BlockScreen::new);
         }
     }
 }
