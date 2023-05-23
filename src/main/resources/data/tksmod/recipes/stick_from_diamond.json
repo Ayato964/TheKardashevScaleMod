@@ -1,0 +1,11 @@
+{
+  "type": "tksmod:debug_block",
+  "ingredients": [
+    {
+      "item": "minecraft:diamond"
+    }
+  ],
+  "output": {
+    "item": "minecraft:stick"
+  }
+}

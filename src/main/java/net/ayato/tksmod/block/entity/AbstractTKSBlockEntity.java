@@ -1,6 +1,8 @@
 package net.ayato.tksmod.block.entity;
 
 import net.ayato.tksmod.item.TKSItems;
+import net.ayato.tksmod.recipe.AbstractTKSRecipe;
+import net.ayato.tksmod.recipe.Debug_BlockRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -17,13 +19,18 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.model.ForgeItemModelShaper;
+import net.minecraftforge.common.ForgeInternalHandler;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.data.ForgeItemTagsProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public abstract class AbstractTKSBlockEntity extends BlockEntity implements MenuProvider {
     protected final ItemStackHandler itemStackHandler = new ItemStackHandler(getStackBoxCount()){
@@ -126,7 +133,6 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
             if(e instanceof AbstractTKSBlockEntity){
                 AbstractTKSBlockEntity entity = ((AbstractTKSBlockEntity) e);
                 entity.progress ++;
-                System.out.println(entity.progress + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 setChanged(level, blockPos, state);
 
                 if(entity.progress >= entity.maxProgress){
@@ -147,9 +153,15 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
      * @param entity
      */
     private static void craftItem(AbstractTKSBlockEntity entity) {
+        Level level = entity.level;
+        SimpleContainer inventory = entity.convertItemHandlerToContainer();
+        Optional<Debug_BlockRecipe> recipe = level.getRecipeManager().getRecipeFor(Debug_BlockRecipe.Type.INSTANCE, inventory, level);
+
+
         if(hasRecipe(entity)){
             entity.itemStackHandler.extractItem(1, 1, false);
-            entity.itemStackHandler.setStackInSlot(2, new ItemStack(TKSItems.STEEL_INGOT.get(), entity.itemStackHandler.getStackInSlot(2).getCount() + 1));
+            entity.itemStackHandler.setStackInSlot(2, new ItemStack(recipe.get().getResultItem().getItem(),
+                    entity.itemStackHandler.getStackInSlot(2).getCount() + 1));
             entity.resetProgress();
         }
     }
@@ -157,14 +169,17 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
     protected static <E extends BlockEntity> boolean hasRecipe(E e) {
         if(e instanceof AbstractTKSBlockEntity){
             AbstractTKSBlockEntity entity = (AbstractTKSBlockEntity) e;
+            Level level = entity.level;
             SimpleContainer inventory = entity.convertItemHandlerToContainer();
 
             /**
              * This Code is not Objects
              */
-            boolean hasGearInFirstSlot = entity.itemStackHandler.getStackInSlot(1).getItem() == TKSItems.WOOD_GEAR.get();
+            Optional<Debug_BlockRecipe> recipe = level.getRecipeManager().getRecipeFor(Debug_BlockRecipe.Type.INSTANCE, inventory, level);
 
-            return hasGearInFirstSlot && canInsertAmountIntoOutputSlot(inventory) && canInsertItemIntoOutputSlot(inventory, new ItemStack(TKSItems.STEEL_INGOT.get(),1));
+            return recipe.isPresent() && canInsertAmountIntoOutputSlot(inventory) &&
+                    canInsertItemIntoOutputSlot(inventory, recipe.get().getResultItem());
+
         }
         return false;
     }

@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.ayato.tksmod.block.TKSBlocks;
 import net.ayato.tksmod.block.entity.TKSBlockEntities;
 import net.ayato.tksmod.item.TKSItems;
+import net.ayato.tksmod.recipe.TKSRecipes;
 import net.ayato.tksmod.screen.Debug_BlockScreen;
 import net.ayato.tksmod.screen.TKSModMenuTypes;
 import net.ayato.tksmod.tabs.CreativeTabs;
@@ -56,6 +57,8 @@ public class TheKardashevScaleMod
         TKSBlockEntities.register(modEventBus);
 
         TKSModMenuTypes.register(modEventBus);
+
+        TKSRecipes.register(modEventBus);
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
         // Register the item to a creative tab
