@@ -8,16 +8,34 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 public class Debug_BlockMenu extends AbstractTKSMenu {
 
 
     public Debug_BlockMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-        super(TKSModMenuTypes.DEBUG_BLOCK_MENU.get(), id, inv, extraData);
+        super(TKSModMenuTypes.DEBUG_BLOCK_MENU.get(), id, inv, extraData, 2, 2);
     }
     public Debug_BlockMenu(int id, Inventory inv, AbstractTKSBlockEntity entity, ContainerData data){
-        super(TKSModMenuTypes.DEBUG_BLOCK_MENU.get(), id, inv, entity, data);
+        super(TKSModMenuTypes.DEBUG_BLOCK_MENU.get(), id, inv, entity, data, 2);
+    }
+
+    @Override
+    protected int getSlotCount() {
+        return 2;
+    }
+
+    @Override
+    protected void setSlots(IItemHandler handler) {
+        this.addSlot(new SlotItemHandler(handler, 0, 86, 15));
+        this.addSlot(new SlotItemHandler(handler, 1, 86, 60));
+    }
+
+    @Override
+    protected int getProgressBarHeight() {
+        return 27;
     }
 /*
     @Override

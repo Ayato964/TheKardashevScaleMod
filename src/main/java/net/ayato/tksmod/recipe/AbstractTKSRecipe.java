@@ -30,7 +30,7 @@ public abstract class AbstractTKSRecipe implements Recipe<SimpleContainer> {
             return false;
         }
 
-        return recipeItems.get(0).test(pContainer.getItem(1));
+        return recipeItems.get(0).test(pContainer.getItem(0));
     }
 
     @Override
@@ -67,6 +67,9 @@ public abstract class AbstractTKSRecipe implements Recipe<SimpleContainer> {
     @Override
     public RecipeType<?> getType() {
         return getMyType();
+    }
+    public static abstract class Type{
+
     }
 
     protected abstract RecipeSerializer<?> getMySerializer();

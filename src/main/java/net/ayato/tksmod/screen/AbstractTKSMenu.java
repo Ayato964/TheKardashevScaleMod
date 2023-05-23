@@ -8,7 +8,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 public abstract class AbstractTKSMenu extends AbstractContainerMenu {
@@ -16,13 +18,13 @@ public abstract class AbstractTKSMenu extends AbstractContainerMenu {
     private final Level level;
     private final ContainerData data;
 
-    protected AbstractTKSMenu(MenuType<?>  type, int id, Inventory inv, FriendlyByteBuf extraData){
-        this(type, id, inv,(AbstractTKSBlockEntity) inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(2)); //2 is dynamic
+    protected AbstractTKSMenu(MenuType<?>  type, int id, Inventory inv, FriendlyByteBuf extraData, int progressParamCount, int itemContainerCount){
+        this(type, id, inv,(AbstractTKSBlockEntity) inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(progressParamCount), itemContainerCount); //2 is dynamic
     }
 
-    protected AbstractTKSMenu(MenuType<?> type, int id, Inventory inv, AbstractTKSBlockEntity entity, ContainerData data){
+    protected AbstractTKSMenu(MenuType<?> type, int id, Inventory inv, AbstractTKSBlockEntity entity, ContainerData data, int itemContainerCount){
         super(type, id);
-        checkContainerSize(inv, 3); // 3 is dynamic
+        checkContainerSize(inv, itemContainerCount); // 3 is dynamic
 
         blockEntity = entity;
         level = inv.player.getLevel();
@@ -31,11 +33,7 @@ public abstract class AbstractTKSMenu extends AbstractContainerMenu {
         addPlayerInventory(inv);
         addPlayerHotBar(inv);
 
-        blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iItemHandler -> { //Argument of ifPresent is dynamic
-            this.addSlot(new SlotItemHandler(iItemHandler, 0, 12, 15));
-            this.addSlot(new SlotItemHandler(iItemHandler, 1, 86, 15));
-            this.addSlot(new SlotItemHandler(iItemHandler, 2, 86, 60));
-        });
+        blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(this::setSlots);
         addDataSlots(data);
     }
     public boolean isCrafting() {
@@ -49,7 +47,7 @@ public abstract class AbstractTKSMenu extends AbstractContainerMenu {
     public int getScaledProgress() {
         int progress = this.data.get(0);
         int maxProgress = this.data.get(1);  // Max Progress
-        int progressArrowSize = 26; // This is the height in pixels of your arrow
+        int progressArrowSize = getProgressBarHeight(); // This is the height in pixels of your arrow
 
         return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;
     }
@@ -70,7 +68,9 @@ public abstract class AbstractTKSMenu extends AbstractContainerMenu {
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
 
     // THIS YOU HAVE TO DEFINE!
-    private static final int TE_INVENTORY_SLOT_COUNT = 3;  // must be the number of slots you have!
+    private final int TE_INVENTORY_SLOT_COUNT = getSlotCount();  // must be the number of slots you have!
+
+    protected abstract int getSlotCount();
 
     @Override
     public ItemStack quickMoveStack(Player playerIn, int index) {
@@ -126,4 +126,6 @@ public abstract class AbstractTKSMenu extends AbstractContainerMenu {
             this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 144));
         }
     }
+    protected abstract void setSlots(IItemHandler handler);
+    protected abstract int getProgressBarHeight();
 }

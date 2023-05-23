@@ -1,6 +1,5 @@
 package net.ayato.tksmod.block.entity;
 
-import net.ayato.tksmod.item.TKSItems;
 import net.ayato.tksmod.recipe.AbstractTKSRecipe;
 import net.ayato.tksmod.recipe.Debug_BlockRecipe;
 import net.minecraft.core.BlockPos;
@@ -19,14 +18,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.ForgeItemModelShaper;
-import net.minecraftforge.common.ForgeInternalHandler;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.data.ForgeItemTagsProvider;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +41,9 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
      * Progress is dynamic.
      */
     private int progress = 0;
-    private int maxProgress = 78;
+    //private int maxProgress = 78;
+    private int maxProgress = getMaxProgress();
+
 
 
     public AbstractTKSBlockEntity(BlockEntityType<?> type,BlockPos pos, BlockState state) {
@@ -57,7 +54,7 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
                 return switch (index){
                     case 0->AbstractTKSBlockEntity.this.progress;
                     case 1 -> AbstractTKSBlockEntity.this.maxProgress;
-                    default -> 0;
+                    default -> getAdditionalProgressData(index);
                 };
             }
 
@@ -66,14 +63,17 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
                 switch (index){
                     case 0->AbstractTKSBlockEntity.this.progress = value;
                     case 1->AbstractTKSBlockEntity.this.maxProgress = value;
+                    default -> setAdditionalProgressData(index, value);
                 }
 
             }
 
             @Override
             public int getCount() {
-                return 2;
+                return Math.max(getContainerDataCount(), 2);
             }
+
+
         };
     }
 
@@ -90,7 +90,7 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+        if(cap == ForgeCapabilities.ITEM_HANDLER){
             return lazyItemHandler.cast();
         }
         return super.getCapability(cap, side);
@@ -159,9 +159,9 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
 
 
         if(hasRecipe(entity)){
-            entity.itemStackHandler.extractItem(1, 1, false);
-            entity.itemStackHandler.setStackInSlot(2, new ItemStack(recipe.get().getResultItem().getItem(),
-                    entity.itemStackHandler.getStackInSlot(2).getCount() + 1));
+            entity.itemStackHandler.extractItem(0, 1, false);
+            entity.itemStackHandler.setStackInSlot(1, new ItemStack(recipe.get().getResultItem().getItem(),
+                    entity.itemStackHandler.getStackInSlot(1).getCount() + 1));
             entity.resetProgress();
         }
     }
@@ -175,7 +175,8 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
             /**
              * This Code is not Objects
              */
-            Optional<Debug_BlockRecipe> recipe = level.getRecipeManager().getRecipeFor(Debug_BlockRecipe.Type.INSTANCE, inventory, level);
+            //Optional<Debug_BlockRecipe> recipe = level.getRecipeManager().getRecipeFor(Debug_BlockRecipe.Type.INSTANCE, inventory, level);
+            Optional<? extends AbstractTKSRecipe> recipe = entity.getRecipe(inventory, level);
 
             return recipe.isPresent() && canInsertAmountIntoOutputSlot(inventory) &&
                     canInsertItemIntoOutputSlot(inventory, recipe.get().getResultItem());
@@ -184,6 +185,7 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
         return false;
     }
 
+
     /**
      * @deprecated
      * @param inventory
@@ -191,7 +193,7 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
      * @return
      */
     private static boolean canInsertItemIntoOutputSlot(SimpleContainer inventory, ItemStack itemStack) {
-        return inventory.getItem(2).getItem() == itemStack.getItem() || inventory.getItem(2).isEmpty();
+        return inventory.getItem(1).getItem() == itemStack.getItem() || inventory.getItem(1).isEmpty();
     }
 
     /**
@@ -200,7 +202,7 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
      * @return
      */
     private static boolean canInsertAmountIntoOutputSlot(SimpleContainer inventory) {
-        return  inventory.getItem(2).getMaxStackSize() > inventory.getItem(2).getCount();
+        return  inventory.getItem(1).getMaxStackSize() > inventory.getItem(1).getCount();
     }
 
     protected SimpleContainer convertItemHandlerToContainer(){
@@ -214,4 +216,10 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
     protected abstract String getName();
     protected abstract int getStackBoxCount();
     protected abstract AbstractContainerMenu getCreateMenu(int id, Inventory inventory, Player player);
+    protected abstract int getMaxProgress();
+    protected int getAdditionalProgressData(int index){return 0;}
+    protected void setAdditionalProgressData(int index, int value){}
+    protected abstract int getContainerDataCount();
+    protected abstract Optional<? extends AbstractTKSRecipe> getRecipe(SimpleContainer inventory, Level level);
+
 }

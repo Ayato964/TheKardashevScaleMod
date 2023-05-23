@@ -30,7 +30,7 @@ public class Debug_BlockRecipe extends AbstractTKSRecipe{
     protected RecipeType<?> getMyType() {
         return Type.INSTANCE;
     }
-    public static class Type implements RecipeType<Debug_BlockRecipe> {
+    public static class Type extends AbstractTKSRecipe.Type implements RecipeType<Debug_BlockRecipe> {
         private Type() { }
         public static final Type INSTANCE = new Type();
         public static final String ID = "debug_block";

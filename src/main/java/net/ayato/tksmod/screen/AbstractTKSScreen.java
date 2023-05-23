@@ -32,23 +32,9 @@ public abstract class AbstractTKSScreen <T extends AbstractContainerMenu> extend
         int y = (height - imageHeight) / 2;
         blit(poseStack, x, y, 0, 0, imageWidth, imageHeight);
 
-        renderProgressArrow(poseStack, x, y);
+        renderProgress(poseStack, x, y);
     }
 
-    /**
-     * @deprecated
-     * @param pPoseStack
-     * @param x
-     * @param y
-     */
-    private void renderProgressArrow(PoseStack pPoseStack, int x, int y) {
-        if(menu instanceof AbstractTKSMenu) {
-            AbstractTKSMenu menu = (AbstractTKSMenu) this.menu;
-            if (menu.isCrafting()) {
-                blit(pPoseStack, x + 105, y + 33, 176, 0, 8, menu.getScaledProgress());
-            }
-        }
-    }
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
         renderBackground(poseStack);
@@ -56,4 +42,5 @@ public abstract class AbstractTKSScreen <T extends AbstractContainerMenu> extend
         renderTooltip(poseStack, mouseX, mouseY);
     }
     protected abstract String getTextureName();
+    protected abstract void renderProgress(PoseStack pPoseStack, int x, int y);
 }
