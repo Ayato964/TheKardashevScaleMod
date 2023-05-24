@@ -23,9 +23,17 @@ public interface ITKSBlockEntityAddon {
 
     public void load(CompoundTag nbt);
 
-    void runningAlways(Level level, BlockPos pos, BlockState state);
+    default void runningAlways(Level level, BlockPos pos, BlockState state){}
 
-    void runningHaveRecipe(Level level, BlockPos pos, BlockState state);
+    default void runningHaveRecipe(Level level, BlockPos pos, BlockState state){}
 
-    abstract boolean getCondition(Level level, BlockPos pos, BlockState state, AbstractTKSBlockEntity e);
+    default boolean getCondition(Level level, BlockPos pos, BlockState state, AbstractTKSBlockEntity e){return true;}
+
+    default void runningMainProgressMaxed(Level level, BlockPos blockPos, BlockState state, AbstractTKSBlockEntity e){}
+    default void drops(Level level, BlockPos worldPosition){}
+    Type getType();
+    enum Type{
+        ITEM,
+        ENERGY
+    }
 }

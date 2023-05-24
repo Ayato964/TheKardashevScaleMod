@@ -32,14 +32,7 @@ import java.util.Optional;
 public abstract class AbstractTKSBlockEntity extends BlockEntity implements MenuProvider {
 
     private final ArrayList<ITKSBlockEntityAddon> addons = setAddons(new ArrayList<>());
-    public final ItemStackHandler itemStackHandler = new ItemStackHandler(getStackBoxCount()){
-        @Override
-        protected void onContentsChanged(int slot) {
-            setChanged();
-        }
-    };
 
-    protected LazyOptional<ItemStackHandler> lazyItemHandler = LazyOptional.empty();
     protected final ContainerData data;
     /**
      * Progress is dynamic.
@@ -94,9 +87,6 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if(cap == ForgeCapabilities.ITEM_HANDLER){
-            return lazyItemHandler.cast();
-        }
         for(ITKSBlockEntityAddon addon : addons){
             LazyOptional<T> l = addon.getCapability(cap, side);
             if(l != null)
@@ -109,7 +99,6 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
     @Override
     public void onLoad() {
         super.onLoad();
-        lazyItemHandler = LazyOptional.of(() -> itemStackHandler);
 
         for(ITKSBlockEntityAddon addon : addons) addon.onLoad();
     }
@@ -117,13 +106,11 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
     @Override
     public void invalidateCaps() {
         super.invalidateCaps();
-        lazyItemHandler.invalidate();
         for(ITKSBlockEntityAddon addon : addons) addon.invalidateCaps();
     }
 
     @Override
     protected void saveAdditional(CompoundTag nbt) {
-        nbt.put("inventory", itemStackHandler.serializeNBT());
         nbt.putInt(getName() + ".progress", this.progress);
 
         for(ITKSBlockEntityAddon addon : addons) addon.saveAdditional(nbt);
@@ -133,15 +120,13 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
 
     @Override
     public void load(CompoundTag nbt) {
-        itemStackHandler.deserializeNBT(nbt.getCompound("inventory"));
         progress = nbt.getInt(getName() + ".progress");
-
         for(ITKSBlockEntityAddon addon : addons) addon.load(nbt);
+
         super.load(nbt);
     }
     public void drops(){
-       SimpleContainer inventory = convertItemHandlerToContainer();
-        Containers.dropContents(level, worldPosition, inventory);
+        for(ITKSBlockEntityAddon addon : addons) addon.drops(level, worldPosition);
     }
     public static <E extends BlockEntity> void tick(Level level, BlockPos blockPos, BlockState state, E e) {
         if(level.isClientSide()){
@@ -153,14 +138,16 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
 
             for(ITKSBlockEntityAddon addon : entity.addons) addon.runningAlways(level, blockPos, state);
 
-            if (hasRecipe(e) && entity.getCondition(level, blockPos, state) && entity.getAddonsConditions(level, blockPos, state)) {
+            if (entity.getCondition(level, blockPos, state) && entity.getAddonsConditions(level, blockPos, state)) {
                 entity.progress++;
                 for(ITKSBlockEntityAddon addon : entity.addons) addon.runningHaveRecipe(level, blockPos, state);
-
+                entity.runningHaveRecipe(level, blockPos, state);
                 setChanged(level, blockPos, state);
 
                 if (entity.progress >= entity.maxProgress) {
-                    craftItem(entity);
+                    entity.runningMainProgressMaxed(level, blockPos, state);
+                    for(ITKSBlockEntityAddon addon : entity.addons) addon.runningMainProgressMaxed(level, blockPos, state, entity);
+                    entity.resetProgress();
                 } else {
                     setChanged(level, blockPos, state);
                 }
@@ -184,52 +171,7 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
     }
 
 
-    protected static void craftItem(AbstractTKSBlockEntity entity) {
-        Level level = entity.level;
-        SimpleContainer inventory = entity.convertItemHandlerToContainer();
-        Optional<? extends AbstractTKSRecipe> recipe  = entity.getRecipe(inventory, level);
 
-
-        if(hasRecipe(entity)){
-            entity.itemStackHandler.extractItem(0, 1, false);
-            entity.itemStackHandler.setStackInSlot(1, new ItemStack(recipe.get().getResultItem().getItem(),
-                    entity.itemStackHandler.getStackInSlot(1).getCount() + 1));
-            entity.resetProgress();
-        }
-    }
-
-    protected static <E extends BlockEntity> boolean hasRecipe(E e) {
-        if(e instanceof AbstractTKSBlockEntity){
-            AbstractTKSBlockEntity entity = (AbstractTKSBlockEntity) e;
-            Level level = entity.level;
-            SimpleContainer inventory = entity.convertItemHandlerToContainer();
-
-            /**
-             * This Code is not Objects
-             */
-            //Optional<Debug_BlockRecipe> recipe = level.getRecipeManager().getRecipeFor(Debug_BlockRecipe.Type.INSTANCE, inventory, level);
-            Optional<? extends AbstractTKSRecipe> recipe = entity.getRecipe(inventory, level);
-
-            return recipe.isPresent() && canInsertAmountIntoOutputSlot(inventory) &&
-                    canInsertItemIntoOutputSlot(inventory, recipe.get().getResultItem());
-
-        }
-        return false;
-    }
-    private static boolean canInsertItemIntoOutputSlot(SimpleContainer inventory, ItemStack itemStack) {
-        return inventory.getItem(1).getItem() == itemStack.getItem() || inventory.getItem(1).isEmpty();
-    }
-    private static boolean canInsertAmountIntoOutputSlot(SimpleContainer inventory) {
-        return  inventory.getItem(1).getMaxStackSize() > inventory.getItem(1).getCount();
-    }
-
-    protected SimpleContainer convertItemHandlerToContainer(){
-        SimpleContainer inventory = new SimpleContainer(itemStackHandler.getSlots());
-        for(int i = 0; i < itemStackHandler.getSlots(); i ++){
-            inventory.setItem(i, itemStackHandler.getStackInSlot(i));
-        }
-        return inventory;
-    }
 
     protected abstract String getName();
     protected abstract int getStackBoxCount();
@@ -238,7 +180,6 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
     protected int getAdditionalProgressData(int index){return 0;}
     protected void setAdditionalProgressData(int index, int value){}
     protected abstract int getContainerDataCount();
-    protected abstract Optional<? extends AbstractTKSRecipe> getRecipe(SimpleContainer inventory, Level level);
 
     protected abstract ArrayList<ITKSBlockEntityAddon> setAddons(ArrayList<ITKSBlockEntityAddon> ad);
 
@@ -259,13 +200,16 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
     protected abstract void runningHaveRecipe(Level level, BlockPos pos, BlockState state);
 
 
+    protected abstract void runningMainProgressMaxed(Level level, BlockPos blockPos, BlockState state);
+
+
     protected abstract boolean getCondition(Level level, BlockPos pos, BlockState state);
 
-    public ITKSBlockEntityAddon getAddonInstance(Class<TKSEnergyEntityAddon> tksEnergyEntityAddonClass) {
-        for(ITKSBlockEntityAddon a : addons){
-            if(a.getClass() == tksEnergyEntityAddonClass)
+    public ITKSBlockEntityAddon getAddonInstance(ITKSBlockEntityAddon.Type type) {
+        for(ITKSBlockEntityAddon a :addons){
+            if(a.getType() == type)
                 return a;
         }
-        return null;
+        throw new IllegalArgumentException("The Addon Error !!!!!\n");
     }
 }

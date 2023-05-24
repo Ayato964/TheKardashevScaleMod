@@ -7,6 +7,7 @@ import net.ayato.tksmod.screen.EnergyTestBlockMenu;
 import net.ayato.tksmod.util.entity.ITKSBlockEntityAddon;
 import net.ayato.tksmod.util.entity.TKSEnergyEntityAddon;
 import net.ayato.tksmod.util.entity.TKSEnergyStorage;
+import net.ayato.tksmod.util.entity.TKSItemSlotEntityAddon;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -22,6 +23,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,31 +60,35 @@ public class EnergyTestBlockEntity extends AbstractTKSBlockEntity{
     }
 
     @Override
-    protected Optional<? extends AbstractTKSRecipe> getRecipe(SimpleContainer inventory, Level level) {
-        return level.getRecipeManager().getRecipeFor(EnergyTestBlockRecipe.Type.INSTANCE, inventory, level);
-    }
-
-    @Override
     protected ArrayList<ITKSBlockEntityAddon> setAddons(ArrayList<ITKSBlockEntityAddon> ad) {
+        ad.add(new TKSItemSlotEntityAddon(this, getName(), 3, new ItemStackHandler(3) {
+            @Override
+            protected void onContentsChanged(int slot) {
+                setChanged();
+            }
+        }){
+            @Override
+            public Optional<? extends AbstractTKSRecipe> getRecipe(SimpleContainer inventory, Level level) {
+                return level.getRecipeManager().getRecipeFor(EnergyTestBlockRecipe.Type.INSTANCE, inventory, level);
+            }
+        });
         ad.add(new TKSEnergyEntityAddon(this, getName(), 32, new TKSEnergyStorage(60000, 256) {
             @Override
             public void onEnergyChanged() {
                 setChanged();
                 //ModMessages.sendToClients(new EnergySyncS2CPacket(this.energy, getBlockPos()));
             }}));
-
         return ad;
     }
 
     @Override
-    protected void runningAlways(Level level, BlockPos pos, BlockState state) {
-
-    }
+    protected void runningAlways(Level level, BlockPos pos, BlockState state) {}
 
     @Override
-    protected void runningHaveRecipe(Level level, BlockPos pos, BlockState state) {
+    protected void runningHaveRecipe(Level level, BlockPos pos, BlockState state) {}
 
-    }
+    @Override
+    protected void runningMainProgressMaxed(Level level, BlockPos blockPos, BlockState state) {}
 
     @Override
     protected boolean getCondition(Level level, BlockPos pos, BlockState state) {
