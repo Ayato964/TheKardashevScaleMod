@@ -92,6 +92,10 @@ public class TKSEnergyEntityAddon implements ITKSBlockEntityAddon{
         return hasEnoughEnergy(e);
     }
 
+    @Override
+    public Type getType() {
+        return Type.ENERGY;
+    }
 
     /*ENERGY!*/
     private void extractEnergy(){
@@ -105,6 +109,6 @@ public class TKSEnergyEntityAddon implements ITKSBlockEntityAddon{
 
     /*ENERGY!*/
     private boolean hasGemInFirstSlot() {
-        return PERCENT.itemStackHandler.getStackInSlot(2).getItem() == Items.COAL;
+        return ((TKSItemSlotEntityAddon)PERCENT.getAddonInstance(Type.ITEM)).itemStackHandler.getStackInSlot(2).getItem() == Items.COAL;
     }
 }
