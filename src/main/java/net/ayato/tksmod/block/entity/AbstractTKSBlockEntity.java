@@ -41,9 +41,9 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
     /**
      * Progress is dynamic.
      */
-    private int progress = 0;
+    protected int progress = 0;
     //private int maxProgress = 78;
-    private int maxProgress = getMaxProgress();
+    protected int maxProgress = getMaxProgress();
 
 
 
@@ -150,7 +150,7 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
     }
 
 
-    private static void craftItem(AbstractTKSBlockEntity entity) {
+    protected static void craftItem(AbstractTKSBlockEntity entity) {
         Level level = entity.level;
         SimpleContainer inventory = entity.convertItemHandlerToContainer();
         Optional<? extends AbstractTKSRecipe> recipe  = entity.getRecipe(inventory, level);

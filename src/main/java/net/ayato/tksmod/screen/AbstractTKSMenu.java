@@ -1,7 +1,8 @@
 package net.ayato.tksmod.screen;
 
-import net.ayato.tksmod.block.TKSBlocks;
 import net.ayato.tksmod.block.entity.AbstractTKSBlockEntity;
+import net.ayato.tksmod.block.entity.EnergyTestBlockEntity;
+import net.minecraft.commands.arguments.coordinates.Coordinates;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -11,8 +12,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.SlotItemHandler;
 
 public abstract class AbstractTKSMenu extends AbstractContainerMenu {
     public final AbstractTKSBlockEntity blockEntity;
@@ -119,4 +118,8 @@ public abstract class AbstractTKSMenu extends AbstractContainerMenu {
     protected abstract void setSlots(IItemHandler handler);
     protected abstract int getProgressBarHeight();
     protected abstract Block getMyBlock();
+
+    public EnergyTestBlockEntity getBlockEntity() {
+        return (EnergyTestBlockEntity) blockEntity;
+    }
 }
