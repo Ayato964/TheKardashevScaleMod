@@ -83,6 +83,7 @@ public class TheKardashevScaleMod
             event.accept(TKSBlocks.STEEL_BLOCK);
             event.accept(TKSBlocks.DEBUG_BLOCK);
             event.accept(TKSBlocks.ENERGY_TEST_BLOCK);
+            event.accept(TKSBlocks.ADVANCED_CRAFTING_TABLE);
         }
     }
 

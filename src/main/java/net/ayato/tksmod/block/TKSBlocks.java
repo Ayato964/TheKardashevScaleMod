@@ -21,6 +21,7 @@ public class TKSBlocks {
     public static final RegistryObject<Block> DEBUG_BLOCK = registerBlock(Debug_Block.ID, Debug_Block::new);
     public static final RegistryObject<Block> ENERGY_TEST_BLOCK = registerBlock(EnergyTestBlock.ID, EnergyTestBlock::new);
 
+    public static final RegistryObject<Block> ADVANCED_CRAFTING_TABLE = registerBlock(AdvancedCraftingTable.ID, AdvancedCraftingTable::new);
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block ){
         RegistryObject<T> toReturn = BLOCKS.register(name, block);
         registerBlockItem(name, toReturn);
