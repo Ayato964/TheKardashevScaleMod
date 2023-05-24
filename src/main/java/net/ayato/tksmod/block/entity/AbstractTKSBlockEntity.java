@@ -1,8 +1,8 @@
 package net.ayato.tksmod.block.entity;
 
 import net.ayato.tksmod.recipe.AbstractTKSRecipe;
-import net.ayato.tksmod.recipe.EnergyTestBlockRecipe;
-import net.ayato.tksmod.screen.EnergyTestBlockMenu;
+import net.ayato.tksmod.util.entity.ITKSBlockEntityAddon;
+import net.ayato.tksmod.util.entity.TKSEnergyEntityAddon;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -26,10 +26,13 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 public abstract class AbstractTKSBlockEntity extends BlockEntity implements MenuProvider {
-    protected final ItemStackHandler itemStackHandler = new ItemStackHandler(getStackBoxCount()){
+
+    private final ArrayList<ITKSBlockEntityAddon> addons = setAddons(new ArrayList<>());
+    public final ItemStackHandler itemStackHandler = new ItemStackHandler(getStackBoxCount()){
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
@@ -41,9 +44,9 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
     /**
      * Progress is dynamic.
      */
-    protected int progress = 0;
+    public int progress = 0;
     //private int maxProgress = 78;
-    protected int maxProgress = getMaxProgress();
+    public int maxProgress = getMaxProgress();
 
 
 
@@ -94,6 +97,12 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
         if(cap == ForgeCapabilities.ITEM_HANDLER){
             return lazyItemHandler.cast();
         }
+        for(ITKSBlockEntityAddon addon : addons){
+            LazyOptional<T> l = addon.getCapability(cap, side);
+            if(l != null)
+                return l;
+        }
+
         return super.getCapability(cap, side);
     }
 
@@ -101,18 +110,24 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
     public void onLoad() {
         super.onLoad();
         lazyItemHandler = LazyOptional.of(() -> itemStackHandler);
+
+        for(ITKSBlockEntityAddon addon : addons) addon.onLoad();
     }
 
     @Override
     public void invalidateCaps() {
         super.invalidateCaps();
         lazyItemHandler.invalidate();
+        for(ITKSBlockEntityAddon addon : addons) addon.invalidateCaps();
     }
 
     @Override
     protected void saveAdditional(CompoundTag nbt) {
         nbt.put("inventory", itemStackHandler.serializeNBT());
         nbt.putInt(getName() + ".progress", this.progress);
+
+        for(ITKSBlockEntityAddon addon : addons) addon.saveAdditional(nbt);
+
         super.saveAdditional(nbt);
     }
 
@@ -120,6 +135,8 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
     public void load(CompoundTag nbt) {
         itemStackHandler.deserializeNBT(nbt.getCompound("inventory"));
         progress = nbt.getInt(getName() + ".progress");
+
+        for(ITKSBlockEntityAddon addon : addons) addon.load(nbt);
         super.load(nbt);
     }
     public void drops(){
@@ -130,20 +147,37 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
         if(level.isClientSide()){
             return;
         }
-        if(hasRecipe(e)){
-            if(e instanceof AbstractTKSBlockEntity){
-                AbstractTKSBlockEntity entity = ((AbstractTKSBlockEntity) e);
-                entity.progress ++;
+        if(e instanceof AbstractTKSBlockEntity) {
+            AbstractTKSBlockEntity entity = ((AbstractTKSBlockEntity) e);
+            entity.runningAlways(level, blockPos, state);
+
+            for(ITKSBlockEntityAddon addon : entity.addons) addon.runningAlways(level, blockPos, state);
+
+            if (hasRecipe(e) && entity.getCondition(level, blockPos, state) && entity.getAddonsConditions(level, blockPos, state)) {
+                entity.progress++;
+                for(ITKSBlockEntityAddon addon : entity.addons) addon.runningHaveRecipe(level, blockPos, state);
+
                 setChanged(level, blockPos, state);
 
-                if(entity.progress >= entity.maxProgress){
+                if (entity.progress >= entity.maxProgress) {
                     craftItem(entity);
-                }else {
+                } else {
                     setChanged(level, blockPos, state);
                 }
+
             }
         }
     }
+
+    protected boolean getAddonsConditions(Level level, BlockPos blockPos, BlockState state){
+        for(ITKSBlockEntityAddon addon : addons){
+            if(!addon.getCondition(level, blockPos, state, this)){
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     private void resetProgress() {
         this.progress = 0;
@@ -206,4 +240,32 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
     protected abstract int getContainerDataCount();
     protected abstract Optional<? extends AbstractTKSRecipe> getRecipe(SimpleContainer inventory, Level level);
 
+    protected abstract ArrayList<ITKSBlockEntityAddon> setAddons(ArrayList<ITKSBlockEntityAddon> ad);
+
+    /**
+     * Methods to write when an entity is unique and does something special.
+     * @param level
+     * @param pos
+     * @param state
+     */
+    protected abstract void runningAlways(Level level, BlockPos pos, BlockState state);
+
+    /**
+     * Methods to write when the entity is unique and does something special when the recipe is established
+     * @param level
+     * @param pos
+     * @param state
+     */
+    protected abstract void runningHaveRecipe(Level level, BlockPos pos, BlockState state);
+
+
+    protected abstract boolean getCondition(Level level, BlockPos pos, BlockState state);
+
+    public ITKSBlockEntityAddon getAddonInstance(Class<TKSEnergyEntityAddon> tksEnergyEntityAddonClass) {
+        for(ITKSBlockEntityAddon a : addons){
+            if(a.getClass() == tksEnergyEntityAddonClass)
+                return a;
+        }
+        return null;
+    }
 }
