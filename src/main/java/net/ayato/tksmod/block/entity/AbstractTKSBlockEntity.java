@@ -41,6 +41,7 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
     //private int maxProgress = 78;
     public int maxProgress = getMaxProgress();
 
+    private boolean isRunProgress = true;
 
 
     public AbstractTKSBlockEntity(BlockEntityType<?> type,BlockPos pos, BlockState state) {
@@ -139,7 +140,8 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
             for(ITKSBlockEntityAddon addon : entity.addons) addon.runningAlways(level, blockPos, state);
 
             if (entity.getCondition(level, blockPos, state) && entity.getAddonsConditions(level, blockPos, state)) {
-                entity.progress++;
+                if(entity.isRunProgress)
+                    entity.progress++;
                 for(ITKSBlockEntityAddon addon : entity.addons) addon.runningHaveRecipe(level, blockPos, state);
                 entity.runningHaveRecipe(level, blockPos, state);
                 setChanged(level, blockPos, state);
@@ -152,9 +154,14 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
                     setChanged(level, blockPos, state);
                 }
 
+            }else{
+                entity.runningNotHasRecipe(level, blockPos, state);
+                setChanged(level, blockPos, state);
             }
         }
     }
+
+    protected abstract void runningNotHasRecipe(Level level, BlockPos blockPos, BlockState state);
 
     protected boolean getAddonsConditions(Level level, BlockPos blockPos, BlockState state){
         for(ITKSBlockEntityAddon addon : addons){
@@ -170,6 +177,13 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
         this.progress = 0;
     }
 
+    protected void stopProgress() {
+        isRunProgress = false;
+        progress = -1;
+    }
+    protected void startProgress() {
+        isRunProgress = true;
+    }
 
 
 

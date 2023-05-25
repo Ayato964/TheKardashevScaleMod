@@ -7,11 +7,13 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 public class Debug_BlockRecipe extends AbstractTKSRecipe{
@@ -29,6 +31,13 @@ public class Debug_BlockRecipe extends AbstractTKSRecipe{
     protected RecipeType<?> getMyType() {
         return Type.INSTANCE;
     }
+
+    @Override
+    protected boolean getMatches(SimpleContainer pContainer, Level pLevel) {
+        return recipeItems.get(0).test(pContainer.getItem(0)); //搬入されたアイテム->pContainer 設定されているレシピ一蘭->recipeItems;;
+    }
+
+
     public static class Type extends AbstractTKSRecipe.Type implements RecipeType<Debug_BlockRecipe> {
         private Type() { }
         public static final Type INSTANCE = new Type();

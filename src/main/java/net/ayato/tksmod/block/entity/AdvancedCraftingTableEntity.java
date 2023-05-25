@@ -2,6 +2,8 @@ package net.ayato.tksmod.block.entity;
 
 import net.ayato.tksmod.block.AdvancedCraftingTable;
 import net.ayato.tksmod.recipe.AbstractTKSRecipe;
+import net.ayato.tksmod.recipe.AdvancedCraftingTableRecipe;
+import net.ayato.tksmod.recipe.EnergyTestBlockRecipe;
 import net.ayato.tksmod.screen.AdvanceCraftingTableMenu;
 import net.ayato.tksmod.screen.EnergyTestBlockMenu;
 import net.ayato.tksmod.util.entity.ITKSBlockEntityAddon;
@@ -22,6 +24,11 @@ import java.util.Optional;
 public class AdvancedCraftingTableEntity extends AbstractTKSBlockEntity{
     public AdvancedCraftingTableEntity(BlockPos pos, BlockState state) {
         super(TKSBlockEntities.ADVANCED_CRAFTING_TABLE.get(), pos, state);
+    }
+
+    @Override
+    protected void runningNotHasRecipe(Level level, BlockPos blockPos, BlockState state) {
+        ((TKSItemSlotEntityAddon) getAddonInstance(ITKSBlockEntityAddon.Type.ITEM)).itemStackHandler.extractItem(9, 1 , false);
     }
 
     @Override
@@ -46,7 +53,10 @@ public class AdvancedCraftingTableEntity extends AbstractTKSBlockEntity{
 
     @Override
     protected ArrayList<ITKSBlockEntityAddon> setAddons(ArrayList<ITKSBlockEntityAddon> ad) {
-        ad.add(new TKSItemSlotEntityAddon(this, getName(), 2, new int[]{0}, new int[]{1}, new ItemStackHandler(2){
+        stopProgress();
+        ad.add(new TKSItemSlotEntityAddon(this, getName(), 10, new int[]{0, 1, 2,
+                                                                                        3, 4, 5,
+                                                                                        6, 7, 8}, new int[]{9}, new ItemStackHandler(10){
             @Override
             protected void onContentsChanged(int slot) {
                 setChanged();
@@ -54,11 +64,24 @@ public class AdvancedCraftingTableEntity extends AbstractTKSBlockEntity{
         }) {
             @Override
             public Optional<? extends AbstractTKSRecipe> getRecipe(SimpleContainer inventory, Level level) {
-                return Optional.empty();
+                return level.getRecipeManager().getRecipeFor(AdvancedCraftingTableRecipe.Type.INSTANCE, inventory, level);
             }
-        });
+        }.editRunningHasRecipe(this::runningHasRecipe).editRunningMainProgressMaxed((addon, inventory, recipe) -> {}));
         return ad;
     }
+    boolean tmpBool = false;
+    private void runningHasRecipe(TKSItemSlotEntityAddon addon, SimpleContainer simpleContainer, Optional<? extends AbstractTKSRecipe> abstractTKSRecipe) {
+        if(addon.itemStackHandler.getStackInSlot(9).isEmpty()) {
+            if(tmpBool){
+                tmpBool = false;
+                addon.removeInputItemAll();
+            }else {
+                addon.setOutputItem(9, abstractTKSRecipe, 1);
+                tmpBool = true;
+            }
+        }
+    }
+
 
     @Override
     protected void runningAlways(Level level, BlockPos pos, BlockState state) {

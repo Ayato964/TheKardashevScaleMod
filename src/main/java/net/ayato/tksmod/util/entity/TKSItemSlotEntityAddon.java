@@ -29,7 +29,8 @@ public abstract class TKSItemSlotEntityAddon implements ITKSBlockEntityAddon{
     protected LazyOptional<ItemStackHandler> lazyItemHandler = LazyOptional.empty();
     private final int SLOT_COUNT;
     private final int[] inputSlotNumbers, outputSlotsNumbers;
-
+    private RunningMainProgressMaxed runningMainProgressMaxed;
+    private RunningHasRecipe runningHasRecipe;
     public TKSItemSlotEntityAddon(AbstractTKSBlockEntity percent, String blockId, int slotCount, int[] inputSlotNumbers, int[] outputSlotNumbers,  ItemStackHandler handler){
         this.inputSlotNumbers = inputSlotNumbers;
         this.outputSlotsNumbers = outputSlotNumbers;
@@ -75,7 +76,10 @@ public abstract class TKSItemSlotEntityAddon implements ITKSBlockEntityAddon{
 
     @Override
     public void runningHaveRecipe(Level level, BlockPos pos, BlockState state) {
-
+        SimpleContainer inventory = convertItemHandlerToContainer();
+        Optional<? extends AbstractTKSRecipe> recipe = getRecipe(inventory, level);
+        if(runningHasRecipe != null)
+            runningHasRecipe.run(this, inventory, recipe);
     }
 
     @Override
@@ -96,15 +100,40 @@ public abstract class TKSItemSlotEntityAddon implements ITKSBlockEntityAddon{
     public void runningMainProgressMaxed(Level level, BlockPos blockPos, BlockState state, AbstractTKSBlockEntity entity) {
         SimpleContainer inventory = convertItemHandlerToContainer();
         Optional<? extends AbstractTKSRecipe> recipe  = getRecipe(inventory, level);
-        if(getCondition(level, blockPos, state, entity)){
-            for(int i : inputSlotNumbers) {
-                itemStackHandler.extractItem(i, 1, false);
+        if(runningMainProgressMaxed == null) {
+            if (getCondition(level, blockPos, state, entity)) {
+                removeInputItemAll();
+                setOutputItemAll(recipe);
             }
-            for(int i :outputSlotsNumbers) {
-                itemStackHandler.setStackInSlot(i, new ItemStack(recipe.get().getResultItem().getItem(),
-                        itemStackHandler.getStackInSlot(i).getCount() + 1));
-            }
+        }else {
+            runningMainProgressMaxed.runningMainProgressMaxed(this, inventory, recipe);
         }
+    }
+    public TKSItemSlotEntityAddon editRunningMainProgressMaxed(RunningMainProgressMaxed method){
+        runningMainProgressMaxed = method;
+        return this;
+    }
+    public TKSItemSlotEntityAddon editRunningHasRecipe(RunningHasRecipe r){
+        runningHasRecipe = r;
+        return this;
+    }
+    public void removeInputItemAll(){
+        for(int i : inputSlotNumbers) {
+            removeInputItem(i, 1);
+        }
+    }
+    public void removeInputItem(int id, int num){
+
+        itemStackHandler.extractItem(id, num, false);
+    }
+    public void setOutputItemAll(Optional<? extends AbstractTKSRecipe> recipe){
+        for(int i : outputSlotsNumbers) {
+            setOutputItem(i,  recipe, itemStackHandler.getStackInSlot(i).getCount() + 1);
+        }
+    }
+    public void setOutputItem(int id, Optional<? extends AbstractTKSRecipe> recipe, int count){
+        itemStackHandler.setStackInSlot(id, new ItemStack(recipe.get().getResultItem().getItem(),
+                count));
     }
 
     @Override
@@ -140,4 +169,11 @@ public abstract class TKSItemSlotEntityAddon implements ITKSBlockEntityAddon{
     }
 
     public abstract  Optional<? extends AbstractTKSRecipe> getRecipe(SimpleContainer inventory, Level level);
+    public interface RunningMainProgressMaxed{
+        public abstract void runningMainProgressMaxed(TKSItemSlotEntityAddon addon, SimpleContainer inventory, Optional<? extends AbstractTKSRecipe> recipe);
+    }
+    public interface RunningHasRecipe{
+        public abstract void run(TKSItemSlotEntityAddon addon, SimpleContainer inventory, Optional<? extends AbstractTKSRecipe> recipe);
+
+    }
 }

@@ -62,6 +62,11 @@ public class Debug_BlockEntity extends AbstractTKSBlockEntity{
     }
 
     @Override
+    protected void runningNotHasRecipe(Level level, BlockPos blockPos, BlockState state) {
+
+    }
+
+    @Override
     protected String getName() {
         return ID;
     }

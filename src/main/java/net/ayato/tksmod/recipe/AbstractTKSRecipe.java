@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class AbstractTKSRecipe implements Recipe<SimpleContainer> {
     private final ResourceLocation id;
     private final ItemStack output;
-    private final NonNullList<Ingredient> recipeItems;
+    protected final NonNullList<Ingredient> recipeItems;
     public AbstractTKSRecipe(ResourceLocation id, ItemStack output,
                                     NonNullList<Ingredient> recipeItems) {
         this.id = id;
@@ -29,8 +29,7 @@ public abstract class AbstractTKSRecipe implements Recipe<SimpleContainer> {
         if(pLevel.isClientSide()) {
             return false;
         }
-
-        return recipeItems.get(0).test(pContainer.getItem(0)); //搬入されたアイテム->pContainer 設定されているレシピ一蘭->recipeItems
+        return getMatches(pContainer, pLevel);
     }
 
     @Override
@@ -74,4 +73,5 @@ public abstract class AbstractTKSRecipe implements Recipe<SimpleContainer> {
 
     protected abstract RecipeSerializer<?> getMySerializer();
     protected abstract RecipeType<?> getMyType();
+    protected abstract boolean getMatches(SimpleContainer pContainer, Level pLevel);
 }

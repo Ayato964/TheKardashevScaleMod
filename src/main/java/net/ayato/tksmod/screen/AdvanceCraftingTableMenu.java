@@ -13,22 +13,28 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class AdvanceCraftingTableMenu extends AbstractTKSMenu{
     public AdvanceCraftingTableMenu(int id, Inventory inv, FriendlyByteBuf extraData){
-        super(TKSModMenuTypes.ADVANCE_CRAFTING_TABLE.get(), id, inv, extraData, 2, 2);
+        super(TKSModMenuTypes.ADVANCE_CRAFTING_TABLE.get(), id, inv, extraData, 2, 10);
     }
 
     public AdvanceCraftingTableMenu(int id, Inventory inv, AbstractTKSBlockEntity entity, ContainerData data){
-        super(TKSModMenuTypes.ADVANCE_CRAFTING_TABLE.get(), id, inv, entity, data, 2);
+        super(TKSModMenuTypes.ADVANCE_CRAFTING_TABLE.get(), id, inv, entity, data, 10);
     }
 
     @Override
     protected int getSlotCount() {
-        return 2;
+        return 10;
     }
 
     @Override
     protected void setSlots(IItemHandler handler) {
-        this.addSlot(new SlotItemHandler(handler, 0, 86, 15));
-        this.addSlot(new SlotItemHandler(handler, 1, 86, 60));
+        int index = 0;
+        for(int i = 0; i < 3; i ++) {
+            for(int c = 0; c < 3; c ++) {
+                this.addSlot(new SlotItemHandler(handler, index, 26 + c * 18, 18 + i * 18));
+                index ++;
+            }
+        }
+        this.addSlot(new SlotItemHandler(handler, index, 117, 37));
 
     }
 

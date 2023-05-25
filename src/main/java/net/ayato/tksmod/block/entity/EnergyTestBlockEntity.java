@@ -34,6 +34,12 @@ public class EnergyTestBlockEntity extends AbstractTKSBlockEntity{
     public EnergyTestBlockEntity(BlockPos pos, BlockState state) {
         super(TKSBlockEntities.ENERGY_TEST_BLOCK.get(), pos, state);
     }
+
+    @Override
+    protected void runningNotHasRecipe(Level level, BlockPos blockPos, BlockState state) {
+
+    }
+
     @Override
     protected String getName() {
         return EnergyTestBlock.ID;

@@ -1,0 +1,17 @@
+{
+  "type": "tksmod:advanced_crafting_table",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "tksmod:steel_ingot"
+    }
+  },
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "output": {
+    "item": "tksmod:steel_block"
+  }
+}
