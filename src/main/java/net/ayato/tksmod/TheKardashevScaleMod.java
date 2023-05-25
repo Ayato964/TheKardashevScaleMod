@@ -5,6 +5,7 @@ import net.ayato.tksmod.block.TKSBlocks;
 import net.ayato.tksmod.block.entity.TKSBlockEntities;
 import net.ayato.tksmod.item.TKSItems;
 import net.ayato.tksmod.recipe.TKSRecipes;
+import net.ayato.tksmod.screen.AdvanceCraftingScreen;
 import net.ayato.tksmod.screen.Debug_BlockScreen;
 import net.ayato.tksmod.screen.EnergyTestBlockScreen;
 import net.ayato.tksmod.screen.TKSModMenuTypes;
@@ -108,6 +109,7 @@ public class TheKardashevScaleMod
 
             MenuScreens.register((MenuType)TKSModMenuTypes.DEBUG_BLOCK_MENU.get(), Debug_BlockScreen::new);
             MenuScreens.register((MenuType)TKSModMenuTypes.ENERGY_TEST_BLOCK.get(), EnergyTestBlockScreen::new);
+            MenuScreens.register((MenuType)TKSModMenuTypes.ADVANCE_CRAFTING_TABLE.get(), AdvanceCraftingScreen::new);
         }
     }
 }

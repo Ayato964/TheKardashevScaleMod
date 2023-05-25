@@ -30,7 +30,7 @@ public abstract class AbstractTKSRecipe implements Recipe<SimpleContainer> {
             return false;
         }
 
-        return recipeItems.get(0).test(pContainer.getItem(0));
+        return recipeItems.get(0).test(pContainer.getItem(0)); //搬入されたアイテム->pContainer 設定されているレシピ一蘭->recipeItems
     }
 
     @Override

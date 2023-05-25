@@ -174,7 +174,6 @@ public abstract class AbstractTKSBlockEntity extends BlockEntity implements Menu
 
 
     protected abstract String getName();
-    protected abstract int getStackBoxCount();
     protected abstract AbstractContainerMenu getCreateMenu(int id, Inventory inventory, Player player);
     protected abstract int getMaxProgress();
     protected int getAdditionalProgressData(int index){return 0;}

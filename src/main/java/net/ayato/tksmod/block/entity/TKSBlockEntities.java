@@ -1,10 +1,9 @@
 package net.ayato.tksmod.block.entity;
 
 import net.ayato.tksmod.TheKardashevScaleMod;
+import net.ayato.tksmod.block.AdvancedCraftingTable;
 import net.ayato.tksmod.block.EnergyTestBlock;
 import net.ayato.tksmod.block.TKSBlocks;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -21,6 +20,9 @@ public class TKSBlockEntities {
     public static final RegistryObject<BlockEntityType<?>> ENERGY_TEST_BLOCK =
             BLOCK_ENTITY.register(EnergyTestBlock.ID, () ->BlockEntityType.Builder.of(EnergyTestBlockEntity::new, TKSBlocks.ENERGY_TEST_BLOCK.get()).build(null)
                     );
+    public static final RegistryObject<BlockEntityType<?>> ADVANCED_CRAFTING_TABLE =
+            BLOCK_ENTITY.register(AdvancedCraftingTable.ID, ()->
+                    BlockEntityType.Builder.of(AdvancedCraftingTableEntity::new, TKSBlocks.ADVANCED_CRAFTING_TABLE.get()).build(null));
 
     public static void register(IEventBus bus){
         BLOCK_ENTITY.register(bus);

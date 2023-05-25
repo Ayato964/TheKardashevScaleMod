@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public abstract class TKSItemSlotEntityAddon implements ITKSBlockEntityAddon{
     private final AbstractTKSBlockEntity PERCENT;
@@ -27,8 +28,11 @@ public abstract class TKSItemSlotEntityAddon implements ITKSBlockEntityAddon{
 
     protected LazyOptional<ItemStackHandler> lazyItemHandler = LazyOptional.empty();
     private final int SLOT_COUNT;
+    private final int[] inputSlotNumbers, outputSlotsNumbers;
 
-    public TKSItemSlotEntityAddon(AbstractTKSBlockEntity percent, String blockId, int slotCount,  ItemStackHandler handler){
+    public TKSItemSlotEntityAddon(AbstractTKSBlockEntity percent, String blockId, int slotCount, int[] inputSlotNumbers, int[] outputSlotNumbers,  ItemStackHandler handler){
+        this.inputSlotNumbers = inputSlotNumbers;
+        this.outputSlotsNumbers = outputSlotNumbers;
         SLOT_COUNT = slotCount;
         blockID = blockId;
         PERCENT = percent;
@@ -93,9 +97,13 @@ public abstract class TKSItemSlotEntityAddon implements ITKSBlockEntityAddon{
         SimpleContainer inventory = convertItemHandlerToContainer();
         Optional<? extends AbstractTKSRecipe> recipe  = getRecipe(inventory, level);
         if(getCondition(level, blockPos, state, entity)){
-            itemStackHandler.extractItem(0, 1, false);
-            itemStackHandler.setStackInSlot(1, new ItemStack(recipe.get().getResultItem().getItem(),
-                    itemStackHandler.getStackInSlot(1).getCount() + 1));
+            for(int i : inputSlotNumbers) {
+                itemStackHandler.extractItem(i, 1, false);
+            }
+            for(int i :outputSlotsNumbers) {
+                itemStackHandler.setStackInSlot(i, new ItemStack(recipe.get().getResultItem().getItem(),
+                        itemStackHandler.getStackInSlot(i).getCount() + 1));
+            }
         }
     }
 
@@ -118,11 +126,17 @@ public abstract class TKSItemSlotEntityAddon implements ITKSBlockEntityAddon{
         return Type.ITEM;
     }
 
-    private static boolean canInsertItemIntoOutputSlot(SimpleContainer inventory, ItemStack itemStack) {
-        return inventory.getItem(1).getItem() == itemStack.getItem() || inventory.getItem(1).isEmpty();
+    private  boolean canInsertItemIntoOutputSlot(SimpleContainer inventory, ItemStack itemStack) {
+        for(int i : outputSlotsNumbers)
+            if(!(inventory.getItem(i).getItem() == itemStack.getItem() || inventory.getItem(i).isEmpty()))
+                return false;
+        return true;
     }
-    private static boolean canInsertAmountIntoOutputSlot(SimpleContainer inventory) {
-        return  inventory.getItem(1).getMaxStackSize() > inventory.getItem(1).getCount();
+    private  boolean canInsertAmountIntoOutputSlot(SimpleContainer inventory) {
+        for(int i : outputSlotsNumbers)
+            if(!( inventory.getItem(i).getMaxStackSize() > inventory.getItem(i).getCount()))
+                return false;
+        return true;
     }
 
     public abstract  Optional<? extends AbstractTKSRecipe> getRecipe(SimpleContainer inventory, Level level);

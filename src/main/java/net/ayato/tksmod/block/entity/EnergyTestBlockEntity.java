@@ -39,10 +39,6 @@ public class EnergyTestBlockEntity extends AbstractTKSBlockEntity{
         return EnergyTestBlock.ID;
     }
 
-    @Override
-    protected int getStackBoxCount() {
-        return 3;
-    }
 
     @Override
     protected AbstractContainerMenu getCreateMenu(int id, Inventory inventory, Player player) {
@@ -61,7 +57,7 @@ public class EnergyTestBlockEntity extends AbstractTKSBlockEntity{
 
     @Override
     protected ArrayList<ITKSBlockEntityAddon> setAddons(ArrayList<ITKSBlockEntityAddon> ad) {
-        ad.add(new TKSItemSlotEntityAddon(this, getName(), 3, new ItemStackHandler(3) {
+        ad.add(new TKSItemSlotEntityAddon(this, getName(), 3, new int[]{0}, new int[]{1}, new ItemStackHandler(3) {
             @Override
             protected void onContentsChanged(int slot) {
                 setChanged();

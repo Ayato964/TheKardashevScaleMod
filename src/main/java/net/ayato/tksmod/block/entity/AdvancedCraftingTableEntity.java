@@ -1,10 +1,9 @@
 package net.ayato.tksmod.block.entity;
 
-import net.ayato.tksmod.block.Debug_Block;
+import net.ayato.tksmod.block.AdvancedCraftingTable;
 import net.ayato.tksmod.recipe.AbstractTKSRecipe;
-import net.ayato.tksmod.recipe.Debug_BlockRecipe;
-import net.ayato.tksmod.recipe.EnergyTestBlockRecipe;
-import net.ayato.tksmod.screen.Debug_BlockMenu;
+import net.ayato.tksmod.screen.AdvanceCraftingTableMenu;
+import net.ayato.tksmod.screen.EnergyTestBlockMenu;
 import net.ayato.tksmod.util.entity.ITKSBlockEntityAddon;
 import net.ayato.tksmod.util.entity.TKSItemSlotEntityAddon;
 import net.minecraft.core.BlockPos;
@@ -13,16 +12,36 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class Debug_BlockEntity extends AbstractTKSBlockEntity{
-    public static final String ID = Debug_Block.ID;
-    public Debug_BlockEntity(BlockPos pos, BlockState state) {
-        super(TKSBlockEntities.DEBUG_BLOCK.get(), pos, state);
+public class AdvancedCraftingTableEntity extends AbstractTKSBlockEntity{
+    public AdvancedCraftingTableEntity(BlockPos pos, BlockState state) {
+        super(TKSBlockEntities.ADVANCED_CRAFTING_TABLE.get(), pos, state);
+    }
+
+    @Override
+    protected String getName() {
+        return AdvancedCraftingTable.ID;
+    }
+
+    @Override
+    protected AbstractContainerMenu getCreateMenu(int id, Inventory inventory, Player player) {
+        return new AdvanceCraftingTableMenu(id, inventory,this, this.data);
+    }
+
+    @Override
+    protected int getMaxProgress() {
+        return 0;
+    }
+
+    @Override
+    protected int getContainerDataCount() {
+        return 2;
     }
 
     @Override
@@ -35,7 +54,7 @@ public class Debug_BlockEntity extends AbstractTKSBlockEntity{
         }) {
             @Override
             public Optional<? extends AbstractTKSRecipe> getRecipe(SimpleContainer inventory, Level level) {
-                return  level.getRecipeManager().getRecipeFor(Debug_BlockRecipe.Type.INSTANCE, inventory, level);
+                return Optional.empty();
             }
         });
         return ad;
@@ -60,26 +79,4 @@ public class Debug_BlockEntity extends AbstractTKSBlockEntity{
     protected boolean getCondition(Level level, BlockPos pos, BlockState state) {
         return true;
     }
-
-    @Override
-    protected String getName() {
-        return ID;
-    }
-
-    @Override
-    protected AbstractContainerMenu getCreateMenu(int id, Inventory inventory, Player player) {
-        return new Debug_BlockMenu(id, inventory, this, this.data);
-    }
-
-    @Override
-    protected int getMaxProgress() {
-        return 78;
-    }
-
-    @Override
-    protected int getContainerDataCount() {
-        return 2;
-    }
-
-
 }
